@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
@@ -56,4 +57,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Room bibliotek
+    implementation("androidx.room:room-runtime:2.5.2") // För att kunna använda Room
+    kapt("androidx.room:room-compiler:2.5.2") // Behövs för att Room ska fungera korrekt
 }
