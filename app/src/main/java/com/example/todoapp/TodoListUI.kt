@@ -1,4 +1,5 @@
 package com.example.todoapp
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -9,13 +10,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.rememberScrollState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todoapp.viewmodels.TodoViewModel
 
 // UI för att hantera Todo-listan
 @Composable
 fun TodoListUI(viewModel: TodoViewModel) {
-    // Hanterar en ny uppgift
+    // Hanterar text för ny uppgift
     var newTask by remember { mutableStateOf("") }
+
+    // Hämtar uppgiftslistan från ViewModel med hjälp av StateFlow
+    val tasks by viewModel.tasks.collectAsStateWithLifecycle(initialValue = emptyList())
 
     Column(
         modifier = Modifier
@@ -23,20 +28,21 @@ fun TodoListUI(viewModel: TodoViewModel) {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        // Titel
+        // Titel för Todo-listan
         Text(
             text = "Mina Aktiviteter",
             style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Inmatning och knapp för att lägga till en uppgift
+        // Sektion för att lägga till nya uppgifter
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            // Textfält för inmatning av ny uppgift
             BasicTextField(
                 value = newTask,
                 onValueChange = { newTask = it },
@@ -50,6 +56,7 @@ fun TodoListUI(viewModel: TodoViewModel) {
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.CenterStart
                     ) {
+                        // Platshållartext om textfältet är tomt
                         if (newTask.isEmpty()) {
                             Text(text = "Lägg till en aktivitet")
                         }
@@ -58,25 +65,29 @@ fun TodoListUI(viewModel: TodoViewModel) {
                 }
             )
 
+            // Knapp för att lägga till en ny uppgift
             Button(onClick = {
                 if (newTask.isNotBlank()) {
-                    viewModel.addTask(newTask)
-                    newTask = ""
+                    viewModel.addTask(newTask) // Lägger till uppgiften i databasen
+                    newTask = "" // Återställer textfältet
                 }
             }) {
                 Text("Lägg till")
             }
         }
 
-        // Visar befintliga uppgifter
-        viewModel.tasks.forEach { task ->
+        // Visar befintliga uppgifter från listan
+        tasks.forEach { task ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(task, modifier = Modifier.weight(1f))
+                // Visar uppgiftens namn
+                Text(task.taskName, modifier = Modifier.weight(1f))
+
+                // Knapp för att ta bort en uppgift
                 Button(onClick = { viewModel.removeTask(task) }) {
                     Text("Ta bort")
                 }

@@ -48,6 +48,7 @@ android {
 }
 
 dependencies {
+    // AndroidX och Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -58,7 +59,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // Room bibliotek
-    implementation("androidx.room:room-runtime:2.5.2") // För att kunna använda Room
-    kapt("androidx.room:room-compiler:2.5.2") // Behövs för att Room ska fungera korrekt
+    // Room för lokal databas
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
 }
