@@ -15,7 +15,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -59,6 +58,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // Navigation Compose
+    implementation("androidx.navigation:navigation-compose:2.7.2")
+
     // Room för lokal databas
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
@@ -66,7 +68,4 @@ dependencies {
 
     // Gson för SubTask-konvertering
     implementation("com.google.code.gson:gson:2.10.1")
-
-    // Lifecycle Compose för StateFlow
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
 }

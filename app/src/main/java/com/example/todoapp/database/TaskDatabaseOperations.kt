@@ -15,15 +15,19 @@ interface TaskDatabaseOperations {
     @Insert
     suspend fun insertTask(todo: TodoEntity): Long
 
-    // Tar bort en specifik uppgift och returnerar antal rader som raderats
+    // Tar bort en specifik uppgift
     @Delete
     suspend fun deleteTask(todo: TodoEntity): Int
 
-    // Uppdaterar en befintlig uppgift i databasen
+    // Uppdaterar en befintlig uppgift
     @Update
     suspend fun updateTask(todo: TodoEntity): Int
 
-    // Hämtar alla uppgifter från databasen, sorterade efter ID
+    // Hämtar alla uppgifter
     @Query("SELECT * FROM todo_table ORDER BY id ASC")
     fun getAllTasks(): Flow<List<TodoEntity>>
+
+    // Tömmer alla uppgifter
+    @Query("DELETE FROM todo_table")
+    suspend fun clearAllTasks()
 }

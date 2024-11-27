@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 class TodoViewModel(application: Application) : AndroidViewModel(application) {
 
     private val api = TodoApi(TodoDatabase.getInstance(application).taskDatabaseOperations())
-    private val _tasks = MutableStateFlow<List<TaskWithSubTasks>>(emptyList())
-    val tasks: StateFlow<List<TaskWithSubTasks>> get() = _tasks
+    private val _tasks = MutableStateFlow<List<TaskWithSubTasks>>(emptyList()) // Håller lista med uppgifter
+    val tasks: StateFlow<List<TaskWithSubTasks>> get() = _tasks // Exponerar en läsbar ström av uppgifter
 
     init {
         fetchTasks() // Hämtar uppgifter vid start
@@ -53,11 +53,19 @@ class TodoViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Tar bort en uppgift
+    // Tar bort en specifik uppgift
     fun removeTask(taskId: Int) {
         viewModelScope.launch {
             api.deleteTask(taskId)
             fetchTasks()
+        }
+    }
+
+    // Tömmer alla uppgifter från databasen
+    fun clearAllTasks() {
+        viewModelScope.launch {
+            api.clearAllTasks() // Kallar API för att rensa alla aktiviteter
+            fetchTasks() // Uppdaterar uppgifterna i UI
         }
     }
 }

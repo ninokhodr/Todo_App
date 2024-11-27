@@ -22,7 +22,7 @@ fun TodoListUI(viewModel: TodoViewModel) {
     val tasks by viewModel.tasks.collectAsStateWithLifecycle(initialValue = emptyList()) // Hämta uppgifter från ViewModel
     val subTasks = remember { mutableStateListOf<SubTask>() } // Tillfällig lista för deluppgifter
     var taskToEdit by remember { mutableStateOf<TaskWithSubTasks?>(null) } // Uppgift som redigeras
-    var showTasks by remember { mutableStateOf(true) } // Växla visa/dölj för uppgifter
+    var showTasks by remember { mutableStateOf(true) } // Växla visa/dölj uppgifter
 
     Column(
         modifier = Modifier
@@ -81,7 +81,7 @@ fun TodoListUI(viewModel: TodoViewModel) {
         if (showTasks) {
             tasks.forEach { task ->
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    // Visa huvuduppgift
+                    // Visa huvuduppgifterna
                     Text(
                         "Uppgift: ${task.taskName}",
                         style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
@@ -110,7 +110,7 @@ fun TodoListUI(viewModel: TodoViewModel) {
             var newSubTask by remember { mutableStateOf("") } // Ny deluppgift
 
             AlertDialog(
-                onDismissRequest = { taskToEdit = null }, // Stäng dialogen
+                onDismissRequest = { taskToEdit = null }, // Stänger dialogen
                 title = { Text("Redigera Uppgift") },
                 text = {
                     Column {
@@ -155,7 +155,7 @@ fun TodoListUI(viewModel: TodoViewModel) {
                             Button(onClick = {
                                 if (newSubTask.isNotBlank()) {
                                     editedSubTasks.add(SubTask(id = 0, name = newSubTask, completed = false))
-                                    newSubTask = "" // Återställ fältet
+                                    newSubTask = "" // Återställer fältet
                                 }
                             }) {
                                 Text("Lägg till deluppgift")
@@ -169,7 +169,7 @@ fun TodoListUI(viewModel: TodoViewModel) {
                             taskName = editedTaskName,
                             subTasks = editedSubTasks.toList()
                         )
-                        viewModel.updateTask(updatedTask) // Uppdatera uppgiften
+                        viewModel.updateTask(updatedTask) // Uppdaterar uppgiften
                         taskToEdit = null
                     }) {
                         Text("Spara")

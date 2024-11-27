@@ -7,45 +7,50 @@ import kotlinx.coroutines.flow.firstOrNull
 // API som hanterar kommunikation mellan databasen och applikationen
 class TodoApi(private val dao: TaskDatabaseOperations) {
 
-    // Hämtar alla uppgifter från databasen och konverterar dem till TaskWithSubTasks
+    // Hämtar alla uppgifter från databasen och konverterar till TaskWithSubTasks
     suspend fun getTasks(): List<TaskWithSubTasks> {
-        val tasks = dao.getAllTasks().firstOrNull() // Hämtar den första listan från Flow
+        val tasks = dao.getAllTasks().firstOrNull() // Hämtar första listan från Flow
         return tasks?.map { entity ->
             TaskWithSubTasks(
                 id = entity.id,
                 taskName = entity.taskName,
-                completed = false, // Standardvärde för completed
+                completed = false, // Standardvärde för "completed"
                 subTasks = entity.subTasks // Kopplade deluppgifter
             )
-        } ?: emptyList() // Returnerar en tom lista om inget hittas
+        } ?: emptyList() // Returnerar tom lista om inget finns
     }
 
-    // Lägger till en ny uppgift i databasen
+    // Lägger till en ny uppgift
     suspend fun addTask(task: TaskWithSubTasks) {
         dao.insertTask(
             TodoEntity(
                 id = task.id, // ID för uppgiften
-                taskName = task.taskName, // Namnet på uppgiften
-                subTasks = task.subTasks // Lista över deluppgifter
+                taskName = task.taskName, // Namn på uppgiften
+                subTasks = task.subTasks // Lista av deluppgifter
             )
         )
     }
 
-    // Uppdaterar en befintlig uppgift i databasen
+    // Uppdaterar en befintlig uppgift
     suspend fun updateTask(task: TaskWithSubTasks) {
         dao.updateTask(
             TodoEntity(
-                id = task.id, // ID för uppgiften som ska uppdateras
-                taskName = task.taskName, // Uppdaterat namn på uppgiften
-                subTasks = task.subTasks // Uppdaterad lista över deluppgifter
+                id = task.id,
+                taskName = task.taskName,
+                subTasks = task.subTasks
             )
         )
     }
 
-    // Tar bort en specifik uppgift från databasen baserat på dess ID
+    // Tar bort en specifik uppgift
     suspend fun deleteTask(taskId: Int) {
-        val tasks = dao.getAllTasks().firstOrNull() // Hämtar den aktuella listan från databasen
-        val entityToDelete = tasks?.find { it.id == taskId } // Hittar rätt uppgift baserat på ID
-        entityToDelete?.let { dao.deleteTask(it) } // Tar bort uppgiften om den finns
+        val tasks = dao.getAllTasks().firstOrNull() // Hämtar aktuell lista
+        val entityToDelete = tasks?.find { it.id == taskId } // Hittar uppgiften via ID
+        entityToDelete?.let { dao.deleteTask(it) }
+    }
+
+    // Tömmer alla aktiviteter
+    suspend fun clearAllTasks() {
+        dao.clearAllTasks() // Använder DAO för att rensa databasen
     }
 }
